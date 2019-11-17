@@ -11,7 +11,7 @@ public class Craft : MonoBehaviour
     List<Recipes> product = RecipesArray.GetRecipes();
     public GameObject[] CraftsSprite;
     public Text text_timerBakery, text_timerFactory, text_countFactory, text_countBakery;
-    public Text[] text_Ingredients1, text_Ingredients2, text_storageProduct;
+    //public Text[] text_Ingredients1, text_Ingredients2, text_storageProduct;
     public GameObject FactorySprite;
    
     
@@ -22,7 +22,7 @@ public class Craft : MonoBehaviour
         text_countFactory.text = "x" + PlayerPrefs.GetFloat(UserConstants.CountBakery);
         text_timerFactory.text = PlayerPrefs.GetFloat(UserConstants.TimerCraftsFactory) + "";
         text_countBakery.text ="x" + PlayerPrefs.GetFloat(UserConstants.CountFactory);
-        for(int i = 0; i <= product.Count; i++)
+       /* for(int i = 0; i <= product.Count; i++)
         {
             text_storageProduct[i].text = PlayerPrefs.GetFloat(product[i].getIndex()) + "";
             text_Ingredients1[i].text = PlayerPrefs.GetFloat(product[i].getNameIngredients1()) + "";
@@ -34,7 +34,7 @@ public class Craft : MonoBehaviour
             {
                 text_Ingredients2[i].text = ""; 
             }
-        }
+        }*/
 
         PlayerPrefs.SetFloat(UserConstants.TimerCraftsFactory, PlayerPrefs.GetFloat(UserConstants.TimerCraftsFactory) - Time.deltaTime);
         if (PlayerPrefs.GetFloat(UserConstants.TimerCraftsFactory) <= 0)

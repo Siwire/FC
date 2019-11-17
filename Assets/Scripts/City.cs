@@ -37,7 +37,7 @@ public class City : MonoBehaviour
         PlayerPrefs.SetFloat(UserConstants.TimerPlants, TimerPlants);
         float timerText = PlayerPrefs.GetFloat(UserConstants.TimerPlants);
         time.text = Math.Round(timerText) + " s   " + PlayerPrefs.GetString(UserConstants.SelectedPlant);
-        Debug.Log(PlayerPrefs.GetString(UserConstants.SelectedPlant));
+        //Debug.Log(PlayerPrefs.GetString(UserConstants.SelectedPlant));
     }
     public void OnMouseDown()
     {
