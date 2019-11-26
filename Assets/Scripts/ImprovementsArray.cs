@@ -8,10 +8,10 @@ public class ImprovememtsArray : MonoBehaviour
 
     public static void AddWorker()
     {
-        workers.Add(new Workers("gamer", 0, 0.0f));
-        workers.Add(new Workers("first", 100, 0.3f));
-        workers.Add(new Workers("second", 200, 0.6f));
-        workers.Add(new Workers("third", 300, 0.9f));
+        workers.Add(new Workers(0, "gamer", 0, 0.0f));
+        workers.Add(new Workers(1, "first", 100, 0.3f));
+        workers.Add(new Workers(2, "second", 200, 0.6f));
+        workers.Add(new Workers(3, "third", 300, 0.9f));
     }
     public static List<Workers> GetWorkers()
     {

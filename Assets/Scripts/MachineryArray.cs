@@ -24,8 +24,8 @@ public class MachineryArray : MonoBehaviour
     {
         return machinery.Find(element => element.index == index);
     }
-    public static IEnumerable<Machinery> GetMachineryByType(string type)
+    public static List<Machinery> GetMachineriesByType(string type)
     {
-        return machinery.Where(i => i.getType() == type);
+        return machinery.FindAll(i => i.getType() == type);
     }
 }

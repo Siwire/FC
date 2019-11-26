@@ -8,6 +8,5 @@ public class GoToCity : MonoBehaviour
     public void OnMouseDown()
     {
         SceneManager.LoadScene("GameCity");
-        //TabBar.ButtonToMenuStatus(false);
     }
 }

@@ -3,34 +3,32 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
+
 public class Main : MonoBehaviour
     
 {
-    public float money, storage;
-    public Text text_money, text_storage, text_fields, text_timerplant;
+    private float money, storage;
+    public Text text_storage, text_fields;
     public Text[] text_plant;
     private static List<Plant> plants = PlantsArray.GetPlants();
     public GameObject[] plantSprite;
     public GameObject Massage;
     public void Start()
     {
-        money = PlayerPrefs.GetFloat(UserConstants.money);
+        
         //objs = (GameObject[])Resources.LoadAll("Plants");
     }
 
     public void Update()
     {
         storage = PlayerPrefs.GetFloat("grass") + PlayerPrefs.GetFloat("corn") + PlayerPrefs.GetFloat("wheat") + PlayerPrefs.GetFloat("tomato") + PlayerPrefs.GetFloat("potato") + PlayerPrefs.GetFloat("beans") + PlayerPrefs.GetFloat("strawberry") + PlayerPrefs.GetFloat("pumpkin");
-        float timerText = PlayerPrefs.GetFloat(UserConstants.TimerPlants);
-        text_timerplant.text = Math.Round(timerText) + " s   " + PlayerPrefs.GetString(UserConstants.SelectedPlant);
-        text_storage.text = storage + "/" + PlayerPrefs.GetInt(UserConstants.LevelStorage);
+        text_storage.text = Math.Round(storage) + "/" + PlayerPrefs.GetInt(UserConstants.LevelStorage);
         text_fields.text = "Fields count: " + PlayerPrefs.GetInt(UserConstants.FieldsCount);
-        text_money.text = money + "$";
-        PlayerPrefs.SetFloat(UserConstants.money, money);
-
+        PlayerPrefs.SetFloat(UserConstants.money, PlayerPrefs.GetFloat(UserConstants.money));
         for (int i = 0; i < plants.Count; i++)
         {
-            text_plant[i].text = PlayerPrefs.GetFloat(plants[i].getIndex()) + "/100";
+            text_plant[i].text = Math.Round(PlayerPrefs.GetFloat(plants[i].getIndex())) + "/100";
         }
 
         float TimerPlants = PlayerPrefs.GetFloat(UserConstants.TimerPlants);
@@ -75,7 +73,7 @@ public class Main : MonoBehaviour
         }
 
         string selectedPlantIndex = PlayerPrefs.GetString(UserConstants.SelectedPlant);
-        float fieldsCount = PlayerPrefs.GetFloat(UserConstants.FieldsCount);
+        int fieldsCount = PlayerPrefs.GetInt(UserConstants.FieldsCount);
         Plant selectedPlant = PlantsArray.GetPlantByIndex(selectedPlantIndex);
         string wlevel = PlayerPrefs.GetString(UserConstants.SelectedWorker);
         Workers autocollect = ImprovememtsArray.GetWorkersByLevel(wlevel);
@@ -119,6 +117,10 @@ public class Main : MonoBehaviour
         public void MassageClose()
     {
         Massage.SetActive(false);
+    }
+    public void OnMouseUp()
+    {
+        SceneManager.LoadScene("main");
     }
 }
 

@@ -1,5 +1,4 @@
-﻿using System;
-class UserConstants
+﻿class UserConstants
 {
     public static string money = "money";
     public static string TimerPlants = "TimerPlants";

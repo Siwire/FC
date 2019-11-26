@@ -15,8 +15,8 @@ public class RecipesArray : MonoBehaviour
         recipes.Add(new Recipes("cannedbeans", "cannedbeans", "beans", "No", 10, 0, 5, 4, 60));
         recipes.Add(new Recipes("wheatbread", "wheatbread", "wheatflour", "No", 10, 0, 5, 5, 100));
         recipes.Add(new Recipes("cornbread", "cornbread", "cornflour", "No", 10, 0, 5, 6, 120));
-        recipes.Add(new Recipes("strawberrypie", "strawberrypie", "wheatflour", "strawberry", 10, 0, 5, 7, 150));
-        recipes.Add(new Recipes("pumpkinpie", "pumpkinpie", "wheatflour", "pumpkin", 10, 0, 5, 8, 200));
+        recipes.Add(new Recipes("strawberrypie", "strawberrypie", "wheatflour", "strawberry", 10, 10, 5, 7, 150));
+        recipes.Add(new Recipes("pumpkinpie", "pumpkinpie", "wheatflour", "pumpkin", 10, 10, 5, 8, 200));
     }
     public static List<Recipes> GetRecipes()
     {

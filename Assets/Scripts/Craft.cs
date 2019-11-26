@@ -11,30 +11,31 @@ public class Craft : MonoBehaviour
     List<Recipes> product = RecipesArray.GetRecipes();
     public GameObject[] CraftsSprite;
     public Text text_timerBakery, text_timerFactory, text_countFactory, text_countBakery;
-    //public Text[] text_Ingredients1, text_Ingredients2, text_storageProduct;
-    public GameObject FactorySprite;
+    public Text[] text_Ingredients1, text_Ingredients2, text_storageProduct;
+    public GameObject FactorySprite, MassageItemsBakery, MassageItemsFactory, MassageTimeFactory, MassageTimeBakery;
    
     
     public void Update()
     {
 
-        text_timerBakery.text = PlayerPrefs.GetFloat(UserConstants.TimerCraftsBakery) + "";
-        text_countFactory.text = "x" + PlayerPrefs.GetFloat(UserConstants.CountBakery);
-        text_timerFactory.text = PlayerPrefs.GetFloat(UserConstants.TimerCraftsFactory) + "";
-        text_countBakery.text ="x" + PlayerPrefs.GetFloat(UserConstants.CountFactory);
-       /* for(int i = 0; i <= product.Count; i++)
+        text_timerBakery.text = Math.Round(PlayerPrefs.GetFloat(UserConstants.TimerCraftsBakery)) + "s";
+        text_countFactory.text = "x" + PlayerPrefs.GetInt(UserConstants.CountFactory);
+        text_timerFactory.text = Math.Round(PlayerPrefs.GetFloat(UserConstants.TimerCraftsFactory)) + "s";
+        text_countBakery.text ="x" + PlayerPrefs.GetInt(UserConstants.CountBakery);
+        
+        for(int i = 0; i < product.Count; i++)
         {
-            text_storageProduct[i].text = PlayerPrefs.GetFloat(product[i].getIndex()) + "";
-            text_Ingredients1[i].text = PlayerPrefs.GetFloat(product[i].getNameIngredients1()) + "";
+            text_storageProduct[i].text = PlayerPrefs.GetInt(product[i].getIndex()) + "";
+            text_Ingredients1[i].text = product[i].getNameIngredients1() + " " + Math.Round(PlayerPrefs.GetFloat(product[i].getNameIngredients1())) + "/" + product[i].getCountforCraft1();
             if (product[i].getNameIngredients2() != "No")
             {
-                text_Ingredients2[i].text = PlayerPrefs.GetFloat(product[i].getNameIngredients2()) + "";
+                text_Ingredients2[i].text = product[i].getNameIngredients2() + " " + Math.Round(PlayerPrefs.GetFloat(product[i].getNameIngredients2())) + "/" + product[i].getCountforCraft2();
             }
             else if (product[i].getNameIngredients2() == "No")
             {
                 text_Ingredients2[i].text = ""; 
             }
-        }*/
+        }
 
         PlayerPrefs.SetFloat(UserConstants.TimerCraftsFactory, PlayerPrefs.GetFloat(UserConstants.TimerCraftsFactory) - Time.deltaTime);
         if (PlayerPrefs.GetFloat(UserConstants.TimerCraftsFactory) <= 0)
@@ -60,6 +61,7 @@ public class Craft : MonoBehaviour
                 PlayerPrefs.SetInt(SelectedCraft, ItemCount + 1);
                 PlayerPrefs.SetInt(UserConstants.CountBakery, (PlayerPrefs.GetInt(UserConstants.CountBakery) -1));
                 Debug.Log(PlayerPrefs.GetInt(UserConstants.SelectedCraftBakery));
+                Debug.Log(PlayerPrefs.GetInt(UserConstants.CountBakery));
             }
         }
     }
@@ -68,7 +70,7 @@ public class Craft : MonoBehaviour
         string NameIngredient1 = RecipesArray.GetRecipes1ByIndex(index).getNameIngredients1();
         string NameIngredient2 = RecipesArray.GetRecipes1ByIndex(index).getNameIngredients2();
         
-        if (PlayerPrefs.GetFloat(NameIngredient1) >= RecipesArray.GetRecipes1ByIndex(index).getCountforCraft1() && PlayerPrefs.GetFloat(NameIngredient2) >= RecipesArray.GetRecipes1ByIndex(index).getCountforCraft2())
+        if (PlayerPrefs.GetFloat(NameIngredient1) >= RecipesArray.GetRecipes1ByIndex(index).getCountforCraft1() && (RecipesArray.GetRecipes1ByIndex(index).getNameIngredients2() == "No" || PlayerPrefs.GetFloat(NameIngredient2) >= RecipesArray.GetRecipes1ByIndex(index).getCountforCraft2()))
         {
             if (PlayerPrefs.GetFloat(UserConstants.TimerCraftsFactory) == 0)
             {
@@ -78,28 +80,32 @@ public class Craft : MonoBehaviour
                     int FactorySpriteIndex = RecipesArray.GetRecipes1ByIndex(index).getCraftsSprite();
                     GameObject FactorySpriteGenerate = Instantiate(CraftsSprite[FactorySpriteIndex]) as GameObject;
                     FactorySpriteGenerate.transform.SetParent(FactorySprite.transform);
+                    PlayerPrefs.SetFloat(NameIngredient1, PlayerPrefs.GetFloat(NameIngredient1) - RecipesArray.GetRecipes1ByIndex(index).getCountforCraft1());
+                    PlayerPrefs.SetFloat(NameIngredient2, PlayerPrefs.GetFloat(NameIngredient2) - RecipesArray.GetRecipes1ByIndex(index).getCountforCraft2());
+                    PlayerPrefs.SetString(UserConstants.SelectedCraftFactory, index);
+                    PlayerPrefs.SetInt(UserConstants.CountFactory, PlayerPrefs.GetInt(UserConstants.CountFactory) + 1);
                 }
-                PlayerPrefs.SetInt(UserConstants.CountFactory, PlayerPrefs.GetInt(UserConstants.CountFactory) + 1);
             }
-            else
+            else if (PlayerPrefs.GetFloat(UserConstants.TimerCraftsFactory) > 0)
             {
                 if (PlayerPrefs.GetString(UserConstants.SelectedCraftFactory) == index)
                 {
                     PlayerPrefs.SetFloat(UserConstants.TimerCraftsFactory, PlayerPrefs.GetFloat(UserConstants.TimerCraftsFactory) + RecipesArray.GetRecipes1ByIndex(index).getTimeforCraft());
                     PlayerPrefs.SetInt(UserConstants.CountFactory, PlayerPrefs.GetInt(UserConstants.CountFactory)+1);
+                    PlayerPrefs.SetFloat(NameIngredient1, PlayerPrefs.GetFloat(NameIngredient1) - RecipesArray.GetRecipes1ByIndex(index).getCountforCraft1());
+                    PlayerPrefs.SetFloat(NameIngredient2, PlayerPrefs.GetFloat(NameIngredient2) - RecipesArray.GetRecipes1ByIndex(index).getCountforCraft2());
                 }
                 else
                 {
                     Debug.Log("Дождитесь завершения");
+                    MassageTimeFactory.SetActive(true);
                 }
             }
-            PlayerPrefs.SetFloat(NameIngredient1, PlayerPrefs.GetFloat(NameIngredient1) - RecipesArray.GetRecipes1ByIndex(index).getCountforCraft1());
-            PlayerPrefs.SetFloat(NameIngredient2, PlayerPrefs.GetFloat(NameIngredient2) - RecipesArray.GetRecipes1ByIndex(index).getCountforCraft2());
-            PlayerPrefs.SetString(UserConstants.SelectedCraftFactory, index);
         }
         else
         {
             Debug.Log("Недостаточно ресурсов");
+            MassageItemsFactory.SetActive(true);
         }
     }
     public void Bakery(string index)
@@ -116,30 +122,51 @@ public class Craft : MonoBehaviour
                     int BakerySpriteIndex = RecipesArray.GetRecipes1ByIndex(index).getCraftsSprite();
                     GameObject BakerySpriteGenerate = Instantiate(CraftsSprite[BakerySpriteIndex]) as GameObject;
                     BakerySpriteGenerate.transform.SetParent(FactorySprite.transform);
+                    PlayerPrefs.SetFloat(NameIngredient1, PlayerPrefs.GetFloat(NameIngredient1) - RecipesArray.GetRecipes1ByIndex(index).getCountforCraft1());
+                    PlayerPrefs.SetFloat(NameIngredient2, PlayerPrefs.GetFloat(NameIngredient2) - RecipesArray.GetRecipes1ByIndex(index).getCountforCraft2());
+                    PlayerPrefs.SetString(UserConstants.SelectedCraftBakery, index);
+                    PlayerPrefs.SetInt(UserConstants.CountBakery, PlayerPrefs.GetInt(UserConstants.CountBakery) + 1);
                 }
-                PlayerPrefs.SetInt(UserConstants.CountBakery, PlayerPrefs.GetInt(UserConstants.CountBakery) + 1);
+               
             }
-            else
+            else if(PlayerPrefs.GetFloat(UserConstants.TimerCraftsBakery) > 0)
             {
                 if (PlayerPrefs.GetString(UserConstants.SelectedCraftBakery) == index)
                 {
                     PlayerPrefs.SetFloat(UserConstants.TimerCraftsBakery, PlayerPrefs.GetFloat(UserConstants.TimerCraftsBakery) + RecipesArray.GetRecipes1ByIndex(index).getTimeforCraft());
                     PlayerPrefs.SetInt(UserConstants.CountBakery, PlayerPrefs.GetInt(UserConstants.CountBakery) + 1);
+                    PlayerPrefs.SetFloat(NameIngredient1, PlayerPrefs.GetFloat(NameIngredient1) - RecipesArray.GetRecipes1ByIndex(index).getCountforCraft1());
+                    PlayerPrefs.SetFloat(NameIngredient2, PlayerPrefs.GetFloat(NameIngredient2) - RecipesArray.GetRecipes1ByIndex(index).getCountforCraft2());
                 }
                 else
                 {
                     Debug.Log("Дождитесь завершения");
+                    MassageTimeBakery.SetActive(true);
                 }
             }
-            PlayerPrefs.SetFloat(NameIngredient1, PlayerPrefs.GetFloat(NameIngredient1) - RecipesArray.GetRecipes1ByIndex(index).getCountforCraft1());
-            PlayerPrefs.SetFloat(NameIngredient2, PlayerPrefs.GetFloat(NameIngredient2) - RecipesArray.GetRecipes1ByIndex(index).getCountforCraft2());
-            PlayerPrefs.SetString(UserConstants.SelectedCraftBakery, index);
         }
         else
         {
             Debug.Log("Недостаточно ресурсов");
+            MassageItemsBakery.SetActive(true);
         }
 
+    }
+    public void MasssageItemsFactoryClose()
+    {
+        MassageItemsFactory.SetActive(false);
+    }
+    public void MasssageTimeFactoryClose()
+    {
+        MassageTimeFactory.SetActive(false);
+    }
+    public void MasssageItemsBakeryClose()
+    {
+        MassageItemsBakery.SetActive(false);
+    }
+    public void MasssageTimeBakeryClose()
+    {
+        MassageItemsBakery.SetActive(false);
     }
 
 }

@@ -12,19 +12,17 @@ public class City : MonoBehaviour
     List<Plant> plants = PlantsArray.GetPlants();
     List<Recipes> product = RecipesArray.GetRecipes();
     public Text[] text_plantPrice, text_storageHarvest, text_storageProduct, text_productPrice;
-    public Text time, text_money;
     public GameObject MassageMoney, MassageItems;
     public void Update()
     {
-        text_money.text = PlayerPrefs.GetFloat(UserConstants.money) + "$";
         for (int i = 0; i < plants.Count; i++)
         {
-            text_storageHarvest[i].text = PlayerPrefs.GetFloat(plants[i].getIndex()) + "";
+            text_storageHarvest[i].text = Math.Round(PlayerPrefs.GetFloat(plants[i].getIndex())) + "";
             text_plantPrice[i].text = PlantsArray.GetPlants()[i].getSellPrice() + "";
         }
         for (int i = 0; i < product.Count; i++)
         {
-            text_storageProduct[i].text = PlayerPrefs.GetFloat(product[i].getIndex()) + "";
+            text_storageProduct[i].text = PlayerPrefs.GetInt(product[i].getIndex()) + "";
             text_productPrice[i].text = RecipesArray.GetRecipes()[i].getProductPrice() + "";
         }
         float TimerPlants = PlayerPrefs.GetFloat(UserConstants.TimerPlants);
@@ -33,11 +31,10 @@ public class City : MonoBehaviour
         {
             TimerPlants = 0;
             PlayerPrefs.SetInt(UserConstants.SelectedPlant, 0);
+            PlayerPrefs.SetString(UserConstants.SelectedPlant, "grass");
         } 
         PlayerPrefs.SetFloat(UserConstants.TimerPlants, TimerPlants);
         float timerText = PlayerPrefs.GetFloat(UserConstants.TimerPlants);
-        time.text = Math.Round(timerText) + " s   " + PlayerPrefs.GetString(UserConstants.SelectedPlant);
-        //Debug.Log(PlayerPrefs.GetString(UserConstants.SelectedPlant));
     }
     public void OnMouseDown()
     {
@@ -75,7 +72,6 @@ public class City : MonoBehaviour
     {
         int ten = 10;
         float plantCount = PlayerPrefs.GetFloat(index);
-        Debug.Log(plantCount);
         if (plantCount >= 10)
         {   
 
@@ -88,6 +84,21 @@ public class City : MonoBehaviour
             MassageItems.SetActive(true);
         }
     }
+    public void SellTenProducts(string index)
+    {
+        int ten = 10;
+        int productCount = PlayerPrefs.GetInt(index);
+        if (productCount >= 10)
+        {
+            PlayerPrefs.SetInt(index, productCount - ten);
+            PlayerPrefs.SetFloat(UserConstants.money, PlayerPrefs.GetFloat(UserConstants.money) + (RecipesArray.GetRecipes1ByIndex(index).getProductPrice()));
+        }
+        else if (productCount < 10)
+        {
+            MassageItems.SetActive(true);
+        }
+    }
+
     public void MasssageItemsClose()
     {
         MassageItems.SetActive(false);

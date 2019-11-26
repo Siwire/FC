@@ -13,22 +13,17 @@ public class TabBar : MonoBehaviour
         if (scene.name == "GameFarm")
         {
             buttonMenu.SetActive(true);
-            Debug.Log("TRUE");
-            Debug.Log(buttonMenu);
         }
         else
         {
             if (buttonMenu)
             {
                 buttonMenu.SetActive(false);
-                Debug.Log("false");
-
             }
         }
     }
     private void Awake()
     {
-        Debug.Log("awake" + SceneManager.GetActiveScene().name);
         if (!isCreated)
         {
             DontDestroyOnLoad(gameObject);
